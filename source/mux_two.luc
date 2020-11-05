@@ -1,0 +1,16 @@
+module mux_two (
+    input a0,
+    input a1,
+    input b,
+    output out
+  ) {
+
+  always {
+    if (b == 0) {
+      out = a0;
+     } else {
+      out = a1;
+     }
+    
+  }
+}

@@ -1,0 +1,706 @@
+module alu_test (
+    input clk,
+    input rst,
+    input alufn[6],
+    input disrupiton,
+    input button,
+    output out,
+    output led[7]
+  ) {
+  
+  alu alu_;
+  sig x[16],y[16],ans[16], not_working;
+  
+  .clk(clk){
+    fsm state(.rst(rst)) = {S0,S1,S2,S3}; // states help in switching between test cases
+  }
+  always {
+  x = 0;
+  y = 0;
+  led = 7b0000000;
+  ans = 0;
+  not_working = 1;
+  case(alufn){ // provides test cases based on the alufn values given by the user
+    6b000000: // test 1: Addition
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{ 
+            x = 16b0000000101010100; // given input A
+            y = 16b0000000100110100; // given input B
+            ans = 16b0000001010001000; // expected output
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{ 
+            x = 16b0111111111111111;
+            y = 16b0000000000000001;
+            ans = 16b1000000000000000;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){
+            state.d = state.S3;
+          }
+          else{ 
+            x = 16b0000000111110100;
+            y = 16b1111110101010101;
+            ans = 16b1111111101001001;
+           state.d = state.S2; 
+            }
+           state.S3:
+            led = 7b0001000;
+          if(button){
+            state.d = state.S0;
+          }
+          else{ 
+            x = 16b1000000000000000;
+            y = 16b1000000000000000;
+            ans = 16b0000000000000000;
+           state.d = state.S3; 
+        }
+        }
+      6b000001: // test 2: Subtraction
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{ 
+            x = 16b0000000010000000;
+            y = 16b0000000000000001;
+            ans = 16b0000000001111111;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{ 
+            x = 16b0000000000000000;
+            y = 16b0000000000000000;
+            ans = 16b0000000000000000;
+           state.d = state.S1; 
+            }
+           state.S2:
+          led = 7b0010000;
+          if(button){
+            state.d = state.S3;
+          }
+          else{ 
+            x = 16b0100000000000000;
+            y = 16b1000000000000000;
+            ans = 16b1100000000000000;
+            state.d = state.S2; 
+            }
+           state.S3:
+          led = 7b0001000;
+          if(button){
+            state.d = state.S0;
+          }
+          else{ 
+            x = 16b1000000000000001;
+            y = 16b1000000000000001;
+            ans = 16b0000000000000000;
+           state.d = state.S3; 
+        }
+        }
+    6b000010: // test 3: Absolute
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{ 
+            x = 16b1111111111111111;
+             ans= 16b0000000000000001;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S0;
+          }
+          else{ 
+            x = 16b0100000000001010;
+            ans = 16b0100000000001010;
+           state.d = state.S1; 
+            }
+          state.S2:
+            state.d = state.S0;
+          state.S3:
+            state.d = state.S0;
+        }
+    6b000100: // test 4: Increment
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{ 
+            x = 16b0100000000100100;
+            ans = 16b0100000000100101;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S0;
+          }
+          else{ 
+            x = 16b0111111111111111;
+            ans = 16b1000000000000000;
+           state.d = state.S1;
+            }
+            state.S2:
+            state.d = state.S0;
+            state.S3:
+            state.d = state.S0;
+        }
+     
+    6b011000: // test 5.1: boolean, AND
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){ 
+            state.d = state.S1;
+          }
+          else{ 
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 1000100010001000; 
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+    6b011110: // test 5.2: boolean, OR
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 1110111011101110; 
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+    6b010110: // test 5.3: boolean, XOR
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){ 
+            state.d = state.S1;
+          }
+          else{
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 0110011001100110;
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+    6b010111: // test 5.4: boolean, NAND
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){ 
+            state.d = state.S1;
+          }
+          else{
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 0111011101110111; 
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+    6b011100: // test 5.5: boolean, "B"
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){ 
+            state.d = state.S1;
+          }
+          else{
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 1100110011001100; 
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+     6b011001: // test 5.6: boolean, XNOR	
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){  
+            state.d = state.S1;
+          }
+          else{
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 1001100110011001; 
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+    6b011010: // test 5.7: boolean, "A" (LDR)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){ 
+            state.d = state.S1;
+          }
+          else{
+            x = 1010101010101010; 
+            y = 1100110011001100; 
+            ans = 1010101010101010; 
+           state.d = state.S0;
+          }
+          state.S1:
+          state.d = state.S0;
+          state.S2:
+          state.d = state.S0;
+          state.S3:
+          state.d = state.S0;
+        }
+    6b000110: // test 6: Mutiply
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){  
+            state.d = state.S1;
+          }
+          else{ 
+            x = 0000000101010100; 
+            y = 0000000000000000; 
+            ans = 0000000000000000; 
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){ 
+            state.d = state.S2;
+          }
+          else{ 
+            x = 0111111111111111;
+            y = 0000000000000011;
+            ans = 0111111111111101;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){ 
+            state.d = state.S3;
+          }
+          else{ 
+            x = 0000000000000011;
+            y = 1111111111111111;
+            ans = 1111111111111101;
+           state.d = state.S2; 
+            }
+           state.S3:
+           state.d = state.S0;
+        }
+      6b000110: // test 6.1: Mutiply
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){  
+            state.d = state.S1;
+          }
+          else{ 
+            x = 0000000101010100; 
+            y = 0000000000000000; 
+            ans = 0000000000000000; 
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){ 
+            state.d = state.S2;
+          }
+          else{ 
+            x = 0111111111111111;
+            y = 0000000000000011;
+            ans = 0111111111111101;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){ 
+            state.d = state.S3;
+          }
+          else{ 
+            x = 0000000000000011;
+            y = 1111111111111111;
+            ans = 1111111111111101;
+           state.d = state.S2; 
+            }
+           state.S3:
+           state.d = state.S0;
+        }
+     6b101000: // test 6.2: Divide
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){  
+            state.d = state.S1;
+          }
+          else{ 
+            x = 0000000000000111; 
+            y = 0000000000000000; 
+            ans = 1111111111111111; 
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){ 
+            state.d = state.S2;
+          }
+          else{ 
+            x = 0000000010101010;
+            y = 0000000101101101;
+            ans = 0000000000000001;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){ 
+            state.d = state.S3;
+          }
+          else{ 
+            x = 0000000000111010;
+            y = 1110000101100110;
+            ans = 0000000000000000;
+           state.d = state.S2; 
+            }
+           state.S3:
+           state.d = state.S0;
+        }
+     6b101100: // test 6.3: Modulo
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){  
+            state.d = state.S1;
+          }
+          else{ 
+            x = 0000000000000111; 
+            y = 0000000000000000; 
+            ans = 1111111111111111; 
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){ 
+            state.d = state.S2;
+          }
+          else{ 
+            x = 0000000010101010;
+            y = 0000000101101101;
+            ans = 0000000000000001;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){ 
+            state.d = state.S3;
+          }
+          else{ 
+            x = 0000000000111010;
+            y = 1110000101100110;
+            ans = 0000000000000000;
+           state.d = state.S2; 
+            }
+           state.S3:
+           state.d = state.S0;
+        }
+     6b100000: // test 7.1: SHL (shift left)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{ 
+            x = 16b0010001011100100;
+            y = 16b0000000000000011;
+            ans = 16b0001011100100000;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{
+            x = 16b1100111100101100;
+            y = 16b0000000000000011;
+            ans = 16b0111100101100000;
+           state.d = state.S1; 
+            }
+           state.S2:
+            state.d = state.S0;
+            state.S3:
+            state.d = state.S0;
+        }
+     6b100001: // test 7.2: SHR (shift right)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{
+            x = 16b0010001011100100;
+            y = 16b0000000000000011;
+            ans = 16b0000010001011100;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{
+            x = 16b1100111100101100;
+            y = 16b0000000000000011;
+            ans = 16b0001100111100101;
+           state.d = state.S1; 
+            }
+           state.S2:
+            state.d = state.S0;
+            state.S3:
+            state.d = state.S0;
+        }
+     6b100011: // test 7.3: SRA (shift right with sign extension)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{
+            x = 16b0010001011100100;
+            y = 16b0000000000000011;
+            ans = 16b0000010001011100;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{
+            x = 16b1100111100101100;
+            y = 16b0000000000000011;
+            ans = 16b1111100111100101;
+           state.d = state.S1; 
+            }
+           state.S2:
+            state.d = state.S0;
+            state.S3:
+            state.d = state.S0;
+        }
+    6b110011: // test 8.1: CMPEQ (A = B)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{
+            x = 16b0000000101010100;
+            y = 16b0000000000000111;
+            ans = 16b0000000000000000;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{
+            x = 16b0000000101010100;
+            y = 16b0000000101010100;
+            ans = 16b0000000000000001;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){
+            state.d = state.S3;
+          }
+          else{
+            x = 16b0000000000000111;
+            y = 16b0000000101010100;
+            ans = 16b0000000000000000;
+           state.d = state.S2; 
+            }
+           state.S3:
+            state.d = state.S0;
+        }
+     6b110101: // test 8.2: CMPLT (A < B)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{
+            x = 16b0000000101010100;
+            y = 16b0000000000000111;
+            ans = 16b0000000000000000;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{
+            x = 16b0000000101010100;
+            y = 16b0000000101010100;
+            ans = 16b0000000000000000;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){
+            state.d = state.S3;
+          }
+          else{
+            x = 16b0000000000000111;
+            y = 16b0000000101010100;
+            ans = 16b0000000000000001;
+           state.d = state.S2; 
+            }
+           state.S3:
+            state.d = state.S0;
+        }
+    6b110111: // test 8.3: CMPLE (A <= B)
+        not_working = 0;
+        case(state.q){
+          state.S0:
+          led = 7b1000000;
+          if(button){
+            state.d = state.S1;
+          }
+          else{
+            x = 16b0000000101010100;
+            y = 16b0000000000000111;
+            ans = 16b0000000000000000;
+           state.d = state.S0;
+          }
+          state.S1:
+          led = 7b0100000;
+          if(button){
+            state.d = state.S2;
+          }
+          else{
+            x = 16b0000000101010100;
+            y = 16b0000000101010100;
+            ans = 16b0000000000000001;
+           state.d = state.S1; 
+            }
+           state.S2:
+           led = 7b0010000;
+          if(button){
+            state.d = state.S3;
+          }
+          else{
+            x = 16b0000000000000111;
+            y = 16b0000000101010100;
+            ans = 16b0000000000000001;
+           state.d = state.S2; 
+            }
+           state.S3:
+            state.d = state.S0;
+        }
+      default: x = 16b1011010101110110;
+               y = 16b0000000000000000;
+               ans = 16b01011101101110111;           
+  }
+    
+  alu_.alufn = alufn; // assign alufn value to the alu
+  alu_.x = x; // initializing the values for the alu 
+  alu_.y = y;
+   if(disrupiton){ // when distraction button is on, it stimulates a scenario where LSB = 0 and MSB = 0, acting like a malfunction
+      if((alu_.out[14:1] == ans[14:1])&&(ans[15]==0)&(ans[0]==0)&&(not_working==0)){
+        out = 1; //  true if ALU output with simulation is equal to expected output
+      }
+      else  {
+        out = 0;
+      }
+    }
+   else{
+   out = alu_.out == ans; // checks if ALU output and distraction output are same, assigns out = 1
+    }
+}

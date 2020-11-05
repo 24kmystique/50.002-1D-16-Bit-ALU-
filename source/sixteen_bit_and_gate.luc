@@ -1,0 +1,12 @@
+module sixteen_bit_and_gate (
+    input a[16],
+    input b[16],
+    output out[16]
+  ) {
+and_gate and_[16];
+  always {
+  and_.a = a;
+  and_.b = b;
+  out = and_.out;
+  }
+}

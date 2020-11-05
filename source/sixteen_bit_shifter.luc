@@ -1,0 +1,84 @@
+module sixteen_bit_shifter (
+//defining all the inputs and outputs required for a 16-bits shifter
+    input alufn[6],
+    input a[16],
+    input b[16],
+    output out[16]
+  ) {
+  
+  sixteen_bit_mux_two mux_[6]; // 6 sets of 16 2-inputs mux
+  and_gate and1_;
+  and_gate and2_;
+  sig right;
+
+  always {
+    
+    mux_.a0[0][15:0] = a[15:0]; // reverse bits of input A if ALUFN0 = 1, else no reverse
+    mux_.a1[0][0] = a[15];
+    mux_.a1[0][1] = a[14];
+    mux_.a1[0][2] = a[13];
+    mux_.a1[0][3] = a[12];
+    mux_.a1[0][4] = a[11];
+    mux_.a1[0][5] = a[10];
+    mux_.a1[0][6] = a[9];
+    mux_.a1[0][7] = a[8];
+    mux_.a1[0][8] = a[7];
+    mux_.a1[0][9] = a[6];
+    mux_.a1[0][10] = a[5];
+    mux_.a1[0][11] = a[4];
+    mux_.a1[0][12] = a[3];
+    mux_.a1[0][13] = a[2];
+    mux_.a1[0][14] = a[1];
+    mux_.a1[0][15] = a[0];
+    mux_.b[0] = alufn[0];
+    
+    and1_.a = alufn[1]; // append 0 to the LSB/MSB if ALUFN[1:0] = 00 or 01 for SHL and SHR respectively
+    and1_.b = alufn[0]; // else append 1 to the MSB for SRA
+    and2_.a = and1_.out;
+    and2_.b = a[15];
+    
+    right = and2_.out;
+    
+    
+    mux_.a0[1] = mux_.out[0]; // if no shifting, output remains unchanged
+    mux_.a1[1][15:8] = mux_.out[0][7:0]; // if there is shifting, shift to the left by 8-bits and append either 0 or 1 at the vacant LSB 
+    mux_.a1[1][7:0] = 8 x{right};
+    mux_.b[1] = b[3]; // shift if B3 = 1, else no shifting
+    
+    mux_.a0[2] = mux_.out[1]; // if no shifting, output remains unchanged
+    mux_.a1[2][15:4] = mux_.out[1][11:0]; // if there is shifting, shift to the left by 4-bits and append either 0 or 1 at the vacant LSB
+    mux_.a1[2][3:0] = 4 x{right};
+    mux_.b[2] = b[2]; // shift if B2 = 1, else no shifting
+    
+    mux_.a0[3] = mux_.out[2]; // if no shifting, output remains unchanged
+    mux_.a1[3][15:2] = mux_.out[2][13:0]; // if there is shifting, shift to the left by 2-bits and append either 0 or 1 at the vacant LSB
+    mux_.a1[3][1:0] = 2 x{right};
+    mux_.b[3] = b[1]; // shift if B1 = 1, else no shifting
+    
+    mux_.a0[4] = mux_.out[3]; // if no shifting, output remains unchanged
+    mux_.a1[4][15:1] = mux_.out[3][14:0]; // if there is shifting, shift to the left by 1-bit and append either 0 or 1 at the vacant LSB
+    mux_.a1[4][0] = right;
+    mux_.b[4] = b[0]; // shift if B0 = 1, else no shifting
+    
+    mux_.a0[5] = mux_.out[4];  // reverse bits of output if ALUFN0 = 1, else no reverse
+    mux_.a1[5][0] = mux_.out[4][15];
+    mux_.a1[5][1] = mux_.out[4][14];
+    mux_.a1[5][2] = mux_.out[4][13];
+    mux_.a1[5][3] = mux_.out[4][12];
+    mux_.a1[5][4] = mux_.out[4][11];
+    mux_.a1[5][5] = mux_.out[4][10];
+    mux_.a1[5][6] = mux_.out[4][9];
+    mux_.a1[5][7] = mux_.out[4][8];
+    mux_.a1[5][8] = mux_.out[4][7];
+    mux_.a1[5][9] = mux_.out[4][6];
+    mux_.a1[5][10] = mux_.out[4][5];
+    mux_.a1[5][11] = mux_.out[4][4];
+    mux_.a1[5][12] = mux_.out[4][3];
+    mux_.a1[5][13] = mux_.out[4][2];
+    mux_.a1[5][14] = mux_.out[4][1];
+    mux_.a1[5][15] = mux_.out[4][0];
+    mux_.b[5] = alufn[0];
+    out = mux_.out[5]; // output is SHL, SHR or SRA if ALUFN[1:0] is 00, 01 or 11 respectively
+  
+  }
+}

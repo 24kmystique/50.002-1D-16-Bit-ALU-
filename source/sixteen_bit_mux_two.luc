@@ -1,0 +1,14 @@
+module sixteen_bit_mux_two (
+    input a1[16],
+    input a0[16],
+    input b,
+    output out[16]
+  ) {
+  mux_two mux_[16];
+  always {
+    mux_.a0 = a0;
+    mux_.a1 = a1;
+    mux_.b = 16x{b};
+    out = mux_.out;
+  }
+}

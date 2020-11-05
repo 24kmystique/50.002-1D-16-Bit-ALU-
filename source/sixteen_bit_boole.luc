@@ -1,0 +1,19 @@
+module sixteen_bit_boole (
+//defining all the inputs and outputs required for a 16-bits boolean
+    input alufn[4],  
+    input a[16], 
+    input b[16],
+    output out[16]
+  ) {
+  mux_four fourmux[16]; // 16 4-inputs mux
+  always {
+  
+    fourmux.alufn0 = 16x{alufn[0]}; 
+    fourmux.alufn1 = 16x{alufn[1]};
+    fourmux.alufn2 = 16x{alufn[2]};
+    fourmux.alufn3 = 16x{alufn[3]};
+    fourmux.a = a; // 16-bits input A used as a selector
+    fourmux.b = b; // 16-bits input B used as a selector
+    out= fourmux.out;
+    }
+  }

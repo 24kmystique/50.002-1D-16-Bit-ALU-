@@ -1,0 +1,14 @@
+module sixteen_bit_absolute (
+//defining all the inputs and outputs required for the absolute of a 16-bit
+    input y[16],
+    output out[16]
+  ) {
+sixteen_bit_adder sixteenbitadder;
+  always {
+  sixteenbitadder.y = y;
+  sixteenbitadder.x = 16b0000000000000000;
+  sixteenbitadder.alufn = y[15]; // output is the positive value of the given input.
+  out = sixteenbitadder.s;
+    
+  }
+}

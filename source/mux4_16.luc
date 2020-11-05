@@ -1,0 +1,10 @@
+module mux4_16 (
+    input clk,  // clock
+    input rst,  // reset
+    output out
+  ) {
+
+  always {
+    out = 0;
+  }
+}

@@ -1,0 +1,27 @@
+module sixteen_bit_adder (
+//defining all the inputs and outputs required for a 16-bits adder
+  input alufn,
+  input x[16],
+  input y[16],
+  output s[16],
+  output z,
+  output v,
+  output n
+  ) 
+{
+  full_adder fulladder[16]; // 16 full adder 
+  xor_gate xor_[16]; // 16 xor gate
+always 
+  {
+    xor_.a = y;
+    xor_.b = 16x{alufn};
+    fulladder.x = x; // inputing all the x and y values
+    fulladder.y = xor_.out;
+    fulladder.cin[0] = alufn; //input for the first cin value (mostly 0)
+    fulladder.cin[15:1] = fulladder.cout[14:0]; //feeding the cout value of current full adder to the next full adder
+    s = fulladder.s; // 16-bits output S
+    z = (fulladder.s == 16b0); // z = 1 when all S outputs are zeros, else z = 0
+    v = (((x[15]) & (xor_.out[15]) & (~fulladder.s[15])) | ((~x[15]) & (~xor_.out[15]) & (fulladder.s[15]))); // v = 1 when addition operation overflows, else v = 0
+    n = (fulladder.s[15] == 1); // n = 1 when S is negative else, n = 0
+   }
+}

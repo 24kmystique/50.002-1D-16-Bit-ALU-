@@ -1,0 +1,20 @@
+module sixteen_bit_modulo (
+//defining all the inputs and outputs required for obtaining the remainder of the division of two 16-bits
+    input a[16],
+    input b[16],
+    output out[16]
+  ) {
+  sixteen_bit_adder adder;
+  sixteen_bit_divide divide;
+  sixteen_bit_multiply multiply;
+  always {
+    divide.a = a; // divide A by B, output is the quotient of A divided by B
+    divide.b = b;
+    multiply.a = divide.out; // mutiply the quotient with the divisor, output is the largerst possible multiple of the divisor which has a value less than the dividend
+    multiply.b = b;
+    adder.x = a; // substract the largest possible muliple of the divisor from the dividend
+    adder.y = multiply.out;
+    adder.alufn = 1;
+    out = adder.s; // output is the remainder of A divided by B
+  }
+}

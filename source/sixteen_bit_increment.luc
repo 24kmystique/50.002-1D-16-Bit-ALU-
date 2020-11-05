@@ -1,0 +1,16 @@
+module sixteen_bit_increment (
+//defining all the inputs and outputs required for a 1-bit increment on a 16-bit
+  input x[16],
+  output s[16]
+
+  )
+{
+  sixteen_bit_adder sixteenbitadder;
+always 
+  {
+   sixteenbitadder.x = x;
+   sixteenbitadder.y = 16b0000000000000001; // increment input x by 1-bit
+   sixteenbitadder.alufn = 1b0;
+   s = sixteenbitadder.s; // 16-bit output of the increment operation
+ 
+}

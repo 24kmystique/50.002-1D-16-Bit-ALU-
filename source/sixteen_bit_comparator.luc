@@ -1,0 +1,29 @@
+module sixteen_bit_comparator (
+//defining all the inputs and outputs required for a 16-bits comparator
+    input alufn[2],
+    input z, // receives input from adder/subtractor
+    input v, // receives input from adder/subtractor
+    input n, // receives input from adder/subtractor
+    output cmp[16] // compare unit output is 16 bits
+  ) {
+  
+  mux_four mux_;
+  xor_gate xor_;
+  or_gate or_;
+
+  always {
+    xor_.a = n;
+    xor_.b = v;
+    or_.a = xor_.out;
+    or_.b = z;
+    mux_.alufn0 = b0; // when ALUFN[2:1] = 00, no comparison is executed
+    mux_.alufn1 = xor_.out; // when ALUFN[2:1] = 10, A < B comparison is executed
+    mux_.alufn2 = z; // when ALUFN[2:1] = 01, A = B comparison is executed
+    mux_.alufn3 = or_.out; // when ALUFN[2:1] = 11, A <= B comparison is executed
+    mux_.a = alufn[1]; // 4-input mux, where ALUFN2 is one of the selector
+    mux_.b = alufn[0];  // 4-input mux, where ALUFN1 is the other selector
+    
+    cmp[15:1] = 15b000000000000000; // most significant 15 bits are zeros
+    cmp[0] = mux_.out; // last bit is either 1 or 0 depending on comparison outcome
+  }
+}

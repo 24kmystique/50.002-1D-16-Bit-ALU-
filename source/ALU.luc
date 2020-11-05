@@ -1,0 +1,74 @@
+module alu (
+    input alufn[6],
+    input x[16],
+    input y[16],
+    output out[16]
+  ) {  
+
+  
+  sixteen_bit_absolute absolute;
+  sixteen_bit_adder adder;
+  sixteen_bit_boole boole;
+  sixteen_bit_comparator comparator;
+  sixteen_bit_increment incr;
+  sixteen_bit_shifter shifter;
+  sixteen_bit_multiply multiply;
+  sixteen_bit_modulo modulo;
+  sixteen_bit_divide divide;
+
+  
+  always {
+  
+    // Initializing the values for all the funciton modules
+    adder.x = x;
+    adder.y = y;
+    adder.alufn = alufn[0];
+    absolute.y = x;
+    incr.x = x;
+    multiply.a = x;
+    multiply.b = y;
+    boole.a = x;
+    boole.b = y;
+    boole.alufn = alufn[3:0];
+    shifter.a = x;
+    shifter.b = y;
+    shifter.alufn = alufn;
+    comparator.v = adder.v;
+    comparator.z = adder.z;
+    comparator.n = adder.n;
+    comparator.alufn = alufn[2:1];
+    modulo.a = x;
+    modulo.b = y;
+    divide.a = x;
+    divide.b = y;
+    
+    // depending on the input alufn value, the respective output will be displayed on the FPGA
+    case(alufn){
+      b000000: out = adder.s;
+      b000001: out = adder.s;
+      b000010: out = absolute.out;
+      b000100: out = incr.s;
+      b000110: out = multiply.out;
+      b011000: out = boole.out;
+      b011110: out = boole.out;
+      b010110: out = boole.out;
+      b011010: out = boole.out;
+      b011100: out = boole.out;
+      b010111: out = boole.out;
+      b011001: out = boole.out;
+      b100000: out = shifter.out;
+      b100001: out = shifter.out;
+      b100011: out = shifter.out;
+      b110011: out = comparator.cmp;
+      b110101: out = comparator.cmp;
+      b110111: out = comparator.cmp;
+      b101000: out = divide.out;
+      b101100: out = modulo.out;
+      
+      default: out = 16b0;
+     }
+    
+    }
+}
+
+// set_property SEVERITY {Warning} [get_drc_checks LUTLP-1]

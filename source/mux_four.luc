@@ -1,0 +1,27 @@
+module mux_four (
+    input alufn0,
+    input alufn1,
+    input alufn2,
+    input alufn3,
+    input a,
+    input b,
+    output out
+  ) {
+
+  always {
+    if (a == 0 & b==0 ) {
+      out = alufn0;
+     } 
+    else if (a==1 & b==0) {
+     out = alufn1;
+    }
+    else if (a==0 & b==1) {
+     out = alufn2;
+    }
+     else if (a==1 & b==1){
+      out = alufn3;
+    }
+      else
+      out = b0;
+     }
+  }

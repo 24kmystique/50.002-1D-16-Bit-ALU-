@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="1D_ALU" board="Alchitry Au" language="Lucid" version="3">
+  <files>
+    <src>value_store.luc</src>
+    <component>pipeline.luc</component>
+    <component>counter.luc</component>
+    <src>sixteen_bit_shifter.luc</src>
+    <src>and_gate.luc</src>
+    <src>or_gate.luc</src>
+    <src>sixteen_bit_divide.luc</src>
+    <src>sixteen_bit_multiply.luc</src>
+    <src>alu.luc</src>
+    <src>sixteen_bit_mux_two.luc</src>
+    <component>reset_conditioner.luc</component>
+    <src>sixteen_bit_adder.luc</src>
+    <src>sixteen_bit_boole.luc</src>
+    <src top="true">au_top.luc</src>
+    <component>button_conditioner.luc</component>
+    <src>sixteen_bit_comparator.luc</src>
+    <src>alu_test.luc</src>
+    <src>sixteen_bit_mux_four.luc</src>
+    <src>full_adder.luc</src>
+    <src>sixteen_bit_absolute.luc</src>
+    <src>mux_four.luc</src>
+    <src>xor_gate.luc</src>
+    <src>sixteen_bit_modulo.luc</src>
+    <src>mux_two.luc</src>
+    <src>sixteen_bit_and_gate.luc</src>
+    <src>sixteen_bit_increment.luc</src>
+    <component>edge_detector.luc</component>
+    <constraint lib="true">alchitry.acf</constraint>
+    <constraint>io_custom.xdc</constraint>
+    <constraint lib="true">io.acf</constraint>
+  </files>
+</project>

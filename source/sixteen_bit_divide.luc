@@ -1,0 +1,10 @@
+module sixteen_bit_divide (
+//defining all the inputs and outputs required for a 16-bit by 16-bit division
+    input a[16],
+    input b[16],
+    output out[16]
+  ) {
+  always {
+    out = a/b; // output is the quotient of A divided by B
+  }
+}
